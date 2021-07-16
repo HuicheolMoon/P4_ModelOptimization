@@ -1,57 +1,67 @@
-# Dialogue State Tracking
+# Model Optimization
 
 - [Task](#Task)
 - [Dataset](#dataset)
-  - [Wizard of Seoul](#wizard-of-seoul)
+  - [TACO](#taco)
   - [Evaluation](#evaluation)
 - [Training details](#training-details)
 - [Result](#result)
 - [Usage](#usage)
   - [Install requirements](#install-requirements)
   - [Train](#train)
+  - [Tune](#tune)
   - [Inference](#inference)
-  - [Evaluation](#evaluation)
 
 ---
 
 ## Task
-`목적 지향형 대화(Task-Oriented Dialogue)`에서는 유저가 미리 정의된 시나리오 안에서 특정 목적을 수행하기 위해 대화를 진행한다고 가정합니다. 그리고 `대화 상태 추적(Dialogue State Tracking)`은 목적 지향형 대화의 중요한 하위 태스크 중 하나입니다. 유저와의 대화에서 미리 시나리오에 의해 정의된 정보인 `Slot`과 매 턴마다 그에 속할 수 있는 `Value`의 집합인 `Dialogue State(대화 상태)`를 매 턴마다 추론해야 합니다.
+최근들어 여러 산업에서 인공지능을 이용해 그동안 해결하지 못 했던 문제들을 풀려는 노력을 하고 있습니다. 대표적인 태스크로는 쓰레기의 재활용 가능 여부을 판단하는 인공지능 쓰레기통이 있습니다. 이를 위해서는 쓰레기 이미지를 분류하는 모델이 탑재되어야 합니다. 하지만 분류만 잘 한다고 해서 사용할 수 있는 것은 아닙니다. 로봇 내부 시스템에 탑재되어 즉각적으로 쓰레기를 분류할 수 있어야만 실제로 사용이 될 수 있습니다.
 
-![DST](https://user-images.githubusercontent.com/77161691/125183603-c974c200-e252-11eb-9320-33b11d66a1e5.png)
-
-본 프로젝트(2021.04.26 - 2021.05.23)에서는 유저와의 대화에서 기정의된 시나이로의 대화 상태를 매 턴마다 추론하는 모델을 학습시켰습니다. 그리고 시나리오에 대해 매 턴마다 알맞은 대화 상태를 예측했습니다. Base model로는 [TRADE](https://github.com/jasonwu0731/trade-dst), [SUMBT](https://github.com/SKTBrain/SUMBT) 를 사용했습니다.
+본 프로젝트(2021.05.24 - 2021.06.18)에서는 분리수거 로봇의 기초 기술인 쓰레기 이미지 분류기를 만들면서 실제로 로봇에 탑재될 만큼 작고 계산량이 적은 모델을 만들었습니다. Base model로는 [MobileNetV2](https://arxiv.org/abs/1801.04381), [EfficientNet](https://arxiv.org/abs/1905.11946) 를 사용했고, Optuna AutoML로 모델 경량화 및 최적화를 진행했습니다.
 
 ## Dataset
-### Wizard of Seoul
-Wizard of Seoul은 아래와 같은 형식을 가지는 대화 데이터의 리스트입니다.
+### TACO
+Segmentation / Object detecion task를 풀기 위해 제작된 COCO format의 재활용 쓰레기 데이터인 TACO 데이터셋을 사용합니다. 단순한 Classification 문제로 설정하기 위해 TACO의 Bounding box를 crop한 데이터를 사용했습니다.
 
-![Wizard of Seoul](https://user-images.githubusercontent.com/77161691/125186631-6e4cca80-e266-11eb-8137-7c8a4a801258.png)
+![TACO](https://user-images.githubusercontent.com/77161691/125893628-6319352f-b26c-4b65-a7ea-32fff671030e.png)
 
-- train dataset: 7000개의 대화 (label 포함)
-- test dataset: 1000개의 대화 (label 미포함)
+TACO dataset은 총 9개의 category로 이루어져 있습니다.
+
+```python
+category = ["Battery", "Clothing", "Glass", "Metal", "Paper", "Paperpack", "Plastic", "Plasticbag", "Styrofoam"]
+```
+
+본 프로젝트에서 사용하는 데이터의 분포는 아래와 같습니다.
+
+![Category](https://user-images.githubusercontent.com/77161691/125894094-e03d1246-78fe-44c4-a9c2-2cfe115b5f8a.png)
+
+- train dataset: 총 32,599장 (label 포함)
+- test dataset: 총 8,159장 (label 미포함)
 
 ### Evaluation
-본 프로젝트에서는 `Joint Goal Accuracy`와 `Slot Accuracy`, 그리고 `Slot F1 Score`의 세 가지 척도로 모델을 평가했습니다. `Joint Goal Accuracy`는 추론된 `Dialogue State`와 실제 `Dialogue State`가 완벽히 일치하는지를 측정합니다. `Slot Accuracy`와 `Slot F1 Score`는 턴 레벨의 측정이 아닌 그 원소인 (Slot, Value) pair에 대한 Accuracy를 측정합니다. `Joint Goal Accuracy`가 `Slot Accuracy`와 `Slot F1 Score` 보다 우선되는 기준입니다.
+본 프로젝트에서는 `f1-score`와 `MACs`의 두 가지 척도를 도입했습니다. `f1-score`는 이미지의 추론된 라벨과 실제 라벨이 얼마나 일치하는지를 측정하는 `모델 성능`에 관한 지표입니다. `MACs`는 모델의 총 연산량을 나타내는 `모델 경량화`에 관한 지표입니다.
+
+일정 `f1-score` 이상을 만족한 후에는 로봇에 탑재될 수 있을 만큼 `MACs`를 줄이는 것이 중요합니다. 현실에서의 효용성 평가를 위해 아래와 같이 `total score`로 모델을 평가했습니다.
+
+![Score](https://user-images.githubusercontent.com/77161691/125894785-5b0df7e9-9c91-4fa9-b8c4-735c9e00abd9.png)
 
 ## Training Details
-| Model | Batch Size | epochs | LR | Train Time |
-| :--- | ---: | ---: | ---: | ---: |
-| `TRADE` | 8 | 50 | 5e-4 | 43h |
-| `SUMBT` | 8 | 30 | 5e-5 | 30h |
+| Model | Image Size | Batch Size | Epochs | Initial LR | Train & Optimize Time |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| `Efficientnet` | 70 | 64 | 500 | 0.2 | 5d |
+| `MobileNetV2` | 224 | 256 | 200 | 0.1 | 2d |
 
-- **V100**을 이용하여 학습하였습니다.
+- **P40**을 이용하여 학습하였습니다.
 
 ## Result
-| Model | Joint Goal Accuracy | Slot Accuracy | Slot F1 Score |
+| Model | Total Score | F1 Score | MACs |
 | --- | ---: | ---: | ---: |
-| [TRADE](https://github.com/jasonwu0731/trade-dst) | 65.64 | 98.93 | 95.63 |
-| [SUMBT](https://github.com/SKTBrain/SUMBT) | 59.57 | 98.66 | 93.92 |
+| [EfficientNet](https://arxiv.org/abs/1905.11946) | 0.7064 | 0.5275 | 4670834 |
+| [MobileNetV2](https://arxiv.org/abs/1801.04381) | 9.9846 | 0.6525 | 135389513 |
 
 ## Usage
 ### Install requirements
-```
-pip install -r requirements.txt
-```
+Please refer to `environment.yml`
 
 ### Train
 ```
@@ -59,25 +69,21 @@ python train.py
 ```
 Please refer to `train.py` for train arguments.
 
+### Tune
+```
+python tune.py
+```
+Please refer to `tune.py` for evaluation arguments.
+
 ### Inference
 ```
 python inference.py
 ```
 Please refer to `inference.py` for inference arguments.
 
-### Evaluation
-```
-python evaluation.py
-```
-Please refer to `evaluation.py` for evaluation arguments.
-
 ---
 #### Docs
-- https://github.com/jasonwu0731/trade-dst
-- https://github.com/SKTBrain/SUMBT
-- https://github.com/clovaai/som-dst
-- https://github.com/zengyan-97/Transformer-DST
-- https://paperswithcode.com/sota/multi-domain-dialogue-state-tracking-on
-
-#### License
-CC-BY-SA
+- https://arxiv.org/abs/1905.11946
+- https://arxiv.org/abs/1801.04381
+- https://optuna.readthedocs.io/en/stable/tutorial/index.html
+- https://arxiv.org/abs/1909.13719v2
