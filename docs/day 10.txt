@@ -1,0 +1,8 @@
+* 추가 시도
+ - InvertedResidual과 MBConv를 모두 고려한 Optuna model search를 통해 점수를 1.61 향상시킴.
+ - epoch을 300으로 늘리고 module repeat를 1로 고정하여 점수를 1.11 향상시킴.
+ - Epoch을 500까지 늘려서 점수를 0.018 향상시킴
+
+* 시도했으나 잘 되지 않았던 것들
+ - img_size를 크게 감소시켜서 MACs를 줄이고자 했으나 img_size가 일정 이상으로 낮아지면 f1이 0.5 미만이 되어 점수에 크게 악영향을 줌. (최종 모델 기준 60~70) -> epoch의 영향력을 빨리 깨닫고 img_size를 30 이하로 내린 후 epoch을 크게 주어 학습했다면… 아쉬움.
+ - INIT_LR을 크게 증가시켜서 학습 속도를 끌어올리고자 했으나 local minima에 갇힌 학습 경향성을 보임.
