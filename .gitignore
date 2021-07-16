@@ -1,0 +1,17 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments, Projects
+.venv
+venv/
+venv.bak/
+.idea/
+
+# baseline
+baseline/
+
+# dataset
+data/
