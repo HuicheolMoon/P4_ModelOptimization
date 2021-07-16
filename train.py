@@ -3,11 +3,9 @@ from datetime import datetime
 import os
 import yaml
 from typing import Any, Dict, Tuple, Union
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
 from src.dataloader import create_dataloader
 from src.loss import CustomCriterion
 from src.model import Model
@@ -15,7 +13,6 @@ from src.trainer import TorchTrainer
 from src.utils.common import get_label_counts, read_yaml
 from src.utils.macs import calc_macs
 from src.utils.torch_utils import check_runtime, model_info
-
 from ptflops import get_model_complexity_info
 
 
@@ -44,8 +41,13 @@ def train(
     train_dl, val_dl, test_dl = create_dataloader(data_config)
 
     # Calc macs
-    macs, params = get_model_complexity_info(model_instance.model, (3, data_config["IMG_SIZE"], data_config["IMG_SIZE"]), as_strings=True,
-                                           print_per_layer_stat=True, verbose=True)
+    macs, params = get_model_complexity_info(
+        model_instance.model,
+        (3, data_config["IMG_SIZE"], data_config["IMG_SIZE"]),
+        as_strings=True,
+        print_per_layer_stat=True,
+        verbose=True
+    )
     
     print(f"macs: {macs}")
 
