@@ -1,0 +1,5 @@
+- .yaml 이랑 .yml이랑 같은거임
+
+- tune.py의 objective의 return을 대회의 score 함수로 바꾸고 optuna study direction을 minimize로 해보자
+	-> 단순 score를 return하는 tuning_score 함수 작성 (추후 evaluation 알고리즘 변경 가능)
+	-> sampler를 MOTPESampler에서 TPESampler로 변경

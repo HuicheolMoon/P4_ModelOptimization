@@ -1,0 +1,5 @@
+[강의 소개]
+
+- 경량화의 목적 - On device AI / AI on Cloud(latency(요청 시간), throughput(처리량)) / Computation
+- 연산 측정 방법 : 	FLOPS(Counting operations) / GPU times
+- AutoML

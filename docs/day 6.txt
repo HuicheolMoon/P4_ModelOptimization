@@ -1,0 +1,13 @@
+squeezenet 구현
+1. squeezenet.yaml 작성
+2. Dropout, DropoutGenerator 구현
+3. Maxpool의 ceil_mode=True 값 받기 위해 poolings.py 수정
+
+기타
+1. linear.py에 repeat 기능 추가
+
+의문
+1. 오피스아워에서의 squeezenet과 내가 작성한 squeezenet의 Conv의 layer 개수와 param 수가 다름 why? 코드는 같은거같은데?
+2. squeezenet 기반 train 결과 f1이 일정 수준 이상으로 올라가지 않음 why?
+	-> squeezenet은 원래 AlexNet 정도 성능밖에 안됨. 모델 크기를 혁신적으로 줄인 것에 의미가 있는 것.
+	제출은 해보자 taco에서 lr 0.05로 줄이기. f1이 낮기 때문에 img_size 등은 조절하면 안될듯

@@ -1,0 +1,2 @@
+한 일
+- tune.py 을 effinetb0 base로 수정하여 학습 시작
