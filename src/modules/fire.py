@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.init as init
-
 from src.modules.base_generator import GeneratorAbstract
 
 

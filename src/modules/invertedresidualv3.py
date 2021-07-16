@@ -1,14 +1,8 @@
-"""Inverted Residual v3 block.
+# Inverted Residual v3 block.
 
-Reference:
-    https://github.com/d-li14/mobilenetv3.pytorch/blob/master/mobilenetv3.py
-- Author: Junghoon Kim
-- Contact: placidus36@gmail.com
-"""
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
-
 from src.modules.activations import HardSigmoid, HardSwish
 from src.modules.base_generator import GeneratorAbstract
 from src.utils.torch_utils import make_divisible

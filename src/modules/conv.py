@@ -1,14 +1,9 @@
-"""Conv module, generator.
-
-- Author: Jongkuk Lim
-- Contact: lim.jeikei@gmail.com
-"""
+# Conv module, generator.
 # pylint: disable=useless-super-delegation
-from typing import Union
 
+from typing import Union
 import torch
 from torch import nn as nn
-
 from src.modules.base_generator import GeneratorAbstract
 from src.utils.torch_utils import Activation, autopad
 

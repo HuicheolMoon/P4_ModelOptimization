@@ -1,5 +1,4 @@
 from typing import Any, Dict, Union
-
 import numpy as np
 from torchvision.datasets import ImageFolder, VisionDataset
 import yaml

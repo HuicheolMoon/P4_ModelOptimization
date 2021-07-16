@@ -1,13 +1,8 @@
-"""Linear module, generator.
+# Linear module, generator.
 
-- Author: Jongkuk Lim
-- Contact: lim.jeikei@gmail.com
-"""
 from typing import Union
-
 import torch
 from torch import nn as nn
-
 from src.modules.base_generator import GeneratorAbstract
 from src.utils.torch_utils import Activation
 

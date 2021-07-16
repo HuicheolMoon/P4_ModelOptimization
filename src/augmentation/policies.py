@@ -1,13 +1,6 @@
-"""PyTorch transforms for data augmentation.
-
-- Author: wlaud1001
-- Email: wlaud1001@snu.ac.kr
-- Reference:
-    https://github.com/j-marple-dev/model_compression
-"""
+# PyTorch transforms for data augmentation
 
 import torchvision.transforms as transforms
-
 from src.augmentation.methods import RandAugmentation, SequentialAugmentation
 from src.augmentation.transforms import FILLCOLOR, SquarePad
 

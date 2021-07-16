@@ -7,7 +7,6 @@
 import os
 import shutil
 from typing import Optional, Tuple, Union
-
 import numpy as np
 from sklearn.metrics import f1_score
 import torch
@@ -18,7 +17,6 @@ from torch.utils.data.dataloader import DataLoader
 from torch.utils.data.sampler import SequentialSampler, SubsetRandomSampler
 import torchvision
 from tqdm import tqdm
-
 from src.utils.torch_utils import save_model
 
 

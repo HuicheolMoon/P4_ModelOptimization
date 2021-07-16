@@ -1,10 +1,6 @@
-"""Flatten module, generator.
+# Flatten module, generator.
 
-- Author: Jongkuk Lim
-- Contact: lim.jeikei@gmail.com
-"""
 from torch import nn as nn
-
 from src.modules.base_generator import GeneratorAbstract
 
 

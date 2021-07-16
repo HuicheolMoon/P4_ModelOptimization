@@ -1,14 +1,7 @@
-"""Image transformations for augmentation.
-
-- Author: wlaud1001
-- Email: wlaud1001@snu.ac.kr
-- Reference:
-    https://github.com/j-marple-dev/model_compression
-"""
+# Image transformations for augmentation.
 
 import random
 from typing import Callable, Dict, Tuple
-
 import PIL
 from PIL.Image import Image
 import PIL.ImageDraw
@@ -16,7 +9,6 @@ import PIL.ImageEnhance
 import PIL.ImageOps
 import numpy as np
 import torchvision.transforms.functional as F
-
 from src.utils.data import get_rand_bbox_coord
 
 FILLCOLOR = (128, 128, 128)

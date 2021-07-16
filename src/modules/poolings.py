@@ -1,11 +1,7 @@
-"""Module generator related to pooling operations.
-
-- Author: Jongkuk Lim
-- Contact: lim.jeikei@gmail.com
-"""
+# Module generator related to pooling operations.
 # pylint: disable=useless-super-delegation
-from torch import nn
 
+from torch import nn
 from src.modules.base_generator import GeneratorAbstract
 
 

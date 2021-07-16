@@ -1,10 +1,7 @@
-'''Dropout Module
--Author : Huicheol Moon
-'''
+# Dropout Module
 
 import torch
 from torch import nn as nn
-
 from src.modules.base_generator import GeneratorAbstract
 
 

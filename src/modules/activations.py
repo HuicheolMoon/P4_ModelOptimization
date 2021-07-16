@@ -1,10 +1,5 @@
-"""Custom activation to work with onnx.
+# Custom activation to work with onnx.
 
-Reference:
-    https://github.com/rwightman/pytorch-image-models/blob/9a25fdf3ad0414b4d66da443fe60ae0aa14edc84/timm/models/layers/activations.py
-- Author: Junghoon Kim
-- Contact: placidus36@gmail.com
-"""
 import torch
 import torch.nn as nn
 from torch.nn import functional as F

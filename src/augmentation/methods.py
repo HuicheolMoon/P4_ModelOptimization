@@ -1,18 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Augmentation methods.
-
-- Author: wlaud1001
-- Email: wlaud1001@snu.ac.kr
-- Reference:
-    https://github.com/j-marple-dev/model_compression
-"""
 
 from abc import ABC
 import random
 from typing import List, Tuple
-
 from PIL.Image import Image
-
 from src.augmentation.transforms import transforms_info
 
 

@@ -1,8 +1,6 @@
 import math
-
 import torch
 import torch.nn as nn
-
 from src.modules.base_generator import GeneratorAbstract
 
 

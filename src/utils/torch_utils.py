@@ -1,13 +1,8 @@
-"""Common utility functions.
-
-- Author: Jongkuk Lim
-- Contact: lim.jeikei@gmail.com
-"""
+# Common utility functions.
 
 import math
 import os
 from typing import List, Optional, Tuple, Union
-
 import numpy as np
 import torch
 from torch import nn as nn

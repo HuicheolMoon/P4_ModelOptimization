@@ -1,15 +1,8 @@
-"""Base Module Generator.
+# Base Module Generator.
 
-This module is responsible for GeneratorAbstract and ModuleGenerator.
-
-- Author: Jongkuk Lim
-- Contact: lim.jeikei@gmail.com
-"""
 from abc import ABC, abstractmethod
 from typing import List, Union
-
 from torch import nn as nn
-
 from src.utils.torch_utils import make_divisible
 
 
