@@ -19,29 +19,28 @@ from train import train
 MODEL_CONFIG = read_yaml(cfg="configs/model/effinetb1.yaml")
 DATA_CONFIG = read_yaml(cfg="configs/data/taco.yaml")
 
+
 def search_hyperparam(trial: optuna.trial.Trial) -> Dict[str, Any]:
     """Search hyperparam from user-specified search space."""
     # epochs = trial.suggest_int("epochs", low=400, high=600, step=100)
     img_size = trial.suggest_int("img_size", low=42, high=98, step=14)
     # n_select = trial.suggest_int("n_select", low=1, high=2, step=1)
     batch_size = trial.suggest_int("batch_size", low=32, high=128, step=32)
-    
     # "EPOCHS": epochs,
     #"n_select": n_select,
-    
+
     return {
         "IMG_SIZE": img_size,
         "BATCH_SIZE": batch_size
     }
 
+
 def search_model(trial: optuna.trial.Trial) -> List[Any]:
     """Search model structure from user-specified search space."""
     model = []
-    # 1, 2,3, 4,5, 6,7, 8,9
-    # TODO: remove hard-coded stride
     n_stride = 0
     MAX_NUM_STRIDE = 5
-    UPPER_STRIDE = 2 # 5(224 example): 224, 112, 56, 28, 14, 7
+    UPPER_STRIDE = 2
 
     # Module 1
     m1 = trial.suggest_categorical("m1", ["Conv", "DWConv"])
@@ -368,7 +367,6 @@ def search_model(trial: optuna.trial.Trial) -> List[Any]:
     model.append([1, "Conv", [last_dim, 1, 1]])
     model.append([1, "GlobalAvgPool", []])
     model.append([1, "FixedConv", [last_dim, 1, 1, None, 1, None]])
-
     return model
 
 
@@ -376,7 +374,6 @@ def tuning_score(test_f1: float, macs: float) -> float:
     f1_pivot = 0.85
     f1_limit = 0.5
     macs_pivot = 100000
-    
     if test_f1 < f1_limit:
         score_f1 = 1
     elif f1_limit <= test_f1 < f1_pivot:
@@ -385,13 +382,12 @@ def tuning_score(test_f1: float, macs: float) -> float:
         score_f1 = 0.5 * (1 - (test_f1 / f1_pivot))
     score_macs = macs / macs_pivot
     result = score_f1 + score_macs
-    
     return result
 
 
 def objective(trial: optuna.trial.Trial, device) -> float:
     """Optuna objective.
-    
+
     Args:
         trial
     Returns:
@@ -403,18 +399,15 @@ def objective(trial: optuna.trial.Trial, device) -> float:
     # hyperparams: EPOCHS, IMG_SIZE, n_select, BATCH_SIZE
     hyperparams = search_hyperparam(trial)
 
-    
     model_config["input_size"] = [data_config["IMG_SIZE"], data_config["IMG_SIZE"]]
-#     model_config["backbone"] = search_model(trial)
+    # model_config["backbone"] = search_model(trial)
 
-#     data_config["AUG_TRAIN_PARAMS"]["n_select"] = hyperparams["n_select"]
+    # data_config["AUG_TRAIN_PARAMS"]["n_select"] = hyperparams["n_select"]
     data_config["BATCH_SIZE"] = hyperparams["BATCH_SIZE"]
-#     data_config["EPOCHS"] = hyperparams["EPOCHS"]
+    # data_config["EPOCHS"] = hyperparams["EPOCHS"]
     data_config["IMG_SIZE"] = hyperparams["IMG_SIZE"]
-
     log_dir = os.path.join("exp", datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
     os.makedirs(log_dir, exist_ok=True)
-    
     model_instance = Model(model_config, verbose=False)
     macs = calc_macs(model_instance.model, (3, data_config["IMG_SIZE"], data_config["IMG_SIZE"]))
 
@@ -426,7 +419,6 @@ def objective(trial: optuna.trial.Trial, device) -> float:
         fp16=data_config["FP16"],
         device=device,
     )
-
     return tuning_score(test_f1, macs)
 
 
@@ -440,7 +432,6 @@ def tune(gpu_id: int, storage: Union[str, None] = None, study_name: str = "pstag
         rdb_storage = optuna.storages.RDBStorage(url=storage)
     else:
         rdb_storage = None
-
     study = optuna.create_study(
         directions=["minimize"],
         storage=rdb_storage,
@@ -449,7 +440,6 @@ def tune(gpu_id: int, storage: Union[str, None] = None, study_name: str = "pstag
         load_if_exists=True
     )
     study.optimize(lambda trial: objective(trial, device), n_trials=20)
-
     pruned_trials = [
         t for t in study.trials if t.state == optuna.trial.TrialState.PRUNED
     ]
@@ -461,23 +451,27 @@ def tune(gpu_id: int, storage: Union[str, None] = None, study_name: str = "pstag
     print("  Number of finished trials: ", len(study.trials))
     print("  Number of pruned trials: ", len(pruned_trials))
     print("  Number of complete trials: ", len(complete_trials))
-
     print("Best trials:")
-    best_trials = study.best_trials
 
-    ## trials that satisfies Pareto Fronts
+    best_trials = study.best_trials
+    # trials that satisfies Pareto Fronts
     for tr in best_trials:
         print(f"  value1:{tr.values[0]}, value2:{tr.values[1]}")
         for key, value in tr.params.items():
             print(f"    {key}:{value}")
 
-    best_trial = get_best_trial_with_condition(study)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Optuna tuner.")
-    parser.add_argument("--gpu", default=0, type=int, help="GPU id to use")
-    parser.add_argument("--storage", default="", type=str, help="RDB Storage URL for optuna.")
-    parser.add_argument("--study-name", default="pstage_automl", type=str, help="Optuna study name.")
+    parser.add_argument(
+        "--gpu", default=0, type=int, help="GPU id to use"
+    )
+    parser.add_argument(
+        "--storage", default="", type=str, help="RDB Storage URL for optuna."
+    )
+    parser.add_argument(
+        "--study-name", default="pstage_automl", type=str, help="Optuna study name."
+    )
     args = parser.parse_args()
     
     tune(args.gpu, storage=None if args.storage == "" else args.storage, study_name=args.study_name)

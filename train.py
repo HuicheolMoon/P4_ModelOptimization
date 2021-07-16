@@ -111,7 +111,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    model_config = read_yaml(cfg = args.model_dir + args.model_name)
+    model_config = read_yaml(cfg=args.model_dir+args.model_name)
     data_config = read_yaml(cfg=args.data)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
