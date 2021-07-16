@@ -1,0 +1,253 @@
+sub1
+effinetb0 , epoch : 50
+Model saved. Current best test f1: 0.521
+Train: [050] Loss: 1.176, Acc: 58.94% F1(macro): 0.43
+ Val:       Loss: 1.030, Acc: 64.21% F1(macro): 0.51:
+ Val:       Loss: 1.027, Acc: 64.26% F1(macro): 0.52:
+Result
+score : 3.4050
+f1 : 0.5106
+macs : 41809542
+------------------------------------------------------------------------------------------------------
+sub2
+effinetb0 , epoch : 50
+img_size = 112
+Model saved. Current best test f1: 0.438
+Train: [050] Loss: 1.302, Acc: 54.68% F1(macro): 0.36
+Val:       Loss: 1.153, Acc: 59.76% F1(macro): 0.43
+Val:       Loss: 1.152, Acc: 59.93% F1(macro): 0.44
+score : 1.7499
+f1 : 0.4526
+macs : 10397222
+------------------------------------------------------------------------------------------------------
+sub3
+effinetb0 , epoch : 50
+img_size = 56
+Model saved. Current best test f1: 0.360
+Train: [050] Loss: 1.436, Acc: 49.48% F1(macro): 0.29
+Val:       Loss: 1.279, Acc: 55.14% F1(macro): 0.35
+Val:       Loss: 1.282, Acc: 55.06% F1(macro): 0.36
+score : 1.1842
+f1 : 0.3655
+macs : 2553606
+------------------------------------------------------------------------------------------------------
+sub4
+effinetb0 , epoch : 100
+img_size = 56
+Model saved. Current best test f1: 0.412
+Train: [100] Loss: 1.330, Acc: 53.54% F1(macro): 0.34
+Val:       Loss: 1.176, Acc: 59.13% F1(macro): 0.41
+score : 1.1842
+f1 : 0.4133
+macs : 2553606
+------------------------------------------------------------------------------------------------------
+sub5
+myeffnetb0 , epoch :200
+img_size = 31
+[
+    # [repeat, module, args]
+       [1, Conv, [32, 3, 2]],
+       # repeat(n), MBConv: t, c, s, k
+       [1, MBConv, [1, 16, 1, 3]],
+       [2, MBConv, [6, 24, 2, 3]],
+       [2, MBConv, [6, 40, 2, 5]],
+       [3, MBConv, [6, 80, 2, 3]],
+       [3, MBConv, [6, 112, 1, 5]],
+       [4, MBConv, [6, 192, 2, 5]],
+       [1, MBConv, [6, 320, 1, 3]],
+       [1, Conv, [128, 1, 1,3]],
+       [1, GlobalAvgPool, []],
+       [1, Conv, [9, 1, 1, null, 1, null]]
+    ]
+Model saved. Current best test f1: 0.364
+Train: [131] Loss: 1.462, Acc: 48.22% F1(macro): 0.29:
+ Val:       Loss: 1.286, Acc: 54.80% F1(macro): 0.36:
+------------------------------------------------------------------------------------------------------
+sub6
+DATA_PATH: "/opt/ml/input/data/"
+DATASET: "TACO"
+IMG_SIZE: 31
+AUG_TRAIN: "randaugment_train"
+AUG_TEST: "simple_augment_test"
+AUG_TRAIN_PARAMS:
+    n_select: 2
+    level: null
+BATCH_SIZE: 128
+EPOCHS: 200
+VAL_RATIO: 0.0
+INIT_LR: 0.1
+FP16: True
+idx |   n |     params |          module |            arguments |   in_channel |   out_channel
+----------------------------------------------------------------------------------------------
+  0 |   1 |        928 |            Conv |           [32, 3, 2] |            3           32
+  1 |   1 |      1,176 |          MBConv |        [1, 16, 1, 3] |           32            8
+  2 |   2 |      3,300 |          MBConv |        [6, 24, 2, 3] |            8            8
+  3 |   2 |      4,836 |          MBConv |        [6, 40, 2, 5] |            8            8
+  4 |   3 |      4,950 |          MBConv |        [6, 80, 2, 3] |            8            8
+  5 |   3 |      7,254 |          MBConv |       [6, 112, 1, 5] |            8            8
+  6 |   4 |      9,672 |          MBConv |       [6, 192, 2, 5] |            8            8
+  7 |   1 |      1,650 |          MBConv |       [6, 320, 1, 3] |            8            8
+  8 |   1 |      1,280 |            Conv |          [128, 1, 1] |            8          128
+  9 |   1 |          0 |   GlobalAvgPool |                   [] |          128          128
+ 10 |   1 |      2,080 |            Conv | [9, 1, 1, None, 1, None] |          128           16
+Model Summary: 352 layers, 37,126 parameters, 37,126 gradients
+Model save path: exp/2021-06-07_13-18-21/best.pt
+macs: 847494.0
+------------------------------------------------------------------------------------------------------
+sub8
+AUG_TEST: simple_augment_test
+AUG_TRAIN: randaugment_train
+AUG_TRAIN_PARAMS:
+  level: null
+  n_select: 2
+BATCH_SIZE: 64
+DATASET: TACO
+DATA_PATH: /opt/ml/input/data/
+EPOCHS: 200
+FP16: true
+IMG_SIZE: 56
+INIT_LR: 0.1
+VAL_RATIO: 0.0
+idx |   n |     params |          module |            arguments |   in_channel |   out_channel
+----------------------------------------------------------------------------------------------
+  0 |   1 |        928 |            Conv |           [32, 3, 2] |            3           32
+  1 |   1 |      1,176 |          MBConv |        [1, 16, 1, 3] |           32            8
+  2 |   1 |      1,650 |          MBConv |        [6, 24, 2, 3] |            8            8
+  3 |   1 |      1,650 |          MBConv |        [6, 40, 2, 3] |            8            8
+  4 |   1 |      1,650 |          MBConv |        [6, 80, 2, 3] |            8            8
+  5 |   1 |      1,650 |          MBConv |       [6, 112, 1, 3] |            8            8
+  6 |   1 |      1,650 |          MBConv |       [6, 192, 2, 3] |            8            8
+  7 |   1 |      1,650 |          MBConv |       [6, 320, 1, 3] |            8            8
+  8 |   1 |      1,280 |            Conv |          [128, 1, 1] |            8          128
+  9 |   1 |          0 |   GlobalAvgPool |                   [] |          128          128
+ 10 |   1 |      2,080 |            Conv | [9, 1, 1, None, 1, None] |          128           16
+Model Summary: 163 layers, 15,364 parameters, 15,364 gradients
+Model saved. Current best test f1: 0.459
+epoch 200 img_size : 56
+------------------------------------------------------------------------------------------------------
+sub9
+idx |   n |     params |          module |            arguments |   in_channel |   out_channel
+----------------------------------------------------------------------------------------------
+  0 |   1 |        928 |            Conv |           [32, 3, 2] |            3           32
+  1 |   1 |      1,176 |          MBConv |        [1, 16, 1, 3] |           32            8
+  2 |   1 |      1,650 |          MBConv |        [6, 24, 2, 3] |            8            8
+  3 |   1 |      1,650 |          MBConv |        [6, 40, 2, 3] |            8            8
+  4 |   1 |      1,650 |          MBConv |        [6, 80, 2, 3] |            8            8
+  5 |   1 |      1,650 |          MBConv |       [6, 112, 1, 3] |            8            8
+  6 |   1 |      1,650 |          MBConv |       [6, 192, 2, 3] |            8            8
+  7 |   1 |      1,650 |          MBConv |       [6, 320, 1, 3] |            8            8
+  8 |   1 |      1,280 |            Conv |          [128, 1, 1] |            8          128
+  9 |   1 |          0 |   GlobalAvgPool |                   [] |          128          128
+ 10 |   1 |      2,080 |            Conv | [9, 1, 1, None, 1, None] |          128           16
+Model Summary: 163 layers, 15,364 parameters, 15,364 gradients
+Model save path: exp/2021-06-08_14-20-17/best.pt
+macs: 664308.0
+AUG_TEST: simple_augment_test
+AUG_TRAIN: randaugment_train
+AUG_TRAIN_PARAMS:
+  level: null
+  n_select: 2
+BATCH_SIZE: 128
+DATASET: TACO
+DATA_PATH: /opt/ml/input/data/
+EPOCHS: 347
+FP16: true
+IMG_SIZE: 31
+INIT_LR: 0.1
+VAL_RATIO: 0.2
+1.0479  0.4201  664308.0000
+------------------------------------------------------------------------------------------------------
+sub10
+idx |   n |     params |          module |            arguments |   in_channel |   out_channel
+----------------------------------------------------------------------------------------------
+  0 |   1 |        928 |            Conv |           [32, 3, 2] |            3           32
+  1 |   1 |      1,176 |          MBConv |        [1, 16, 1, 3] |           32            8
+  2 |   1 |      1,650 |          MBConv |        [6, 24, 2, 3] |            8            8
+  3 |   1 |      1,650 |          MBConv |        [6, 40, 2, 3] |            8            8
+  4 |   1 |      1,650 |          MBConv |        [6, 80, 2, 3] |            8            8
+  5 |   1 |      1,650 |          MBConv |       [6, 112, 1, 3] |            8            8
+  6 |   1 |      1,650 |          MBConv |       [6, 192, 2, 3] |            8            8
+  7 |   1 |      1,650 |          MBConv |       [6, 320, 1, 3] |            8            8
+  8 |   1 |      1,280 |            Conv |          [128, 1, 1] |            8          128
+  9 |   1 |          0 |   GlobalAvgPool |                   [] |          128          128
+ 10 |   1 |      2,080 |            Conv | [9, 1, 1, None, 1, None] |          128           16
+Model Summary: 163 layers, 15,364 parameters, 15,364 gradients
+Model save path: exp/2021-06-09_07-27-50/best.pt
+macs: 5946100.0
+DATA_PATH: "/opt/ml/input/data/"
+DATASET: "TACO"
+IMG_SIZE: 96
+AUG_TRAIN: "randaugment_train"
+AUG_TEST: "simple_augment_test"
+AUG_TRAIN_PARAMS:
+    n_select: 2
+    level: null
+BATCH_SIZE: 128
+EPOCHS: 400
+VAL_RATIO: 0.2
+INIT_LR: 0.1
+FP16: True
+------------------------------------------------------------------------------------------------------
+sub11
+idx |   n |     params |          module |            arguments |   in_channel |   out_channel
+----------------------------------------------------------------------------------------------
+  0 |   1 |        928 |            Conv |           [32, 3, 2] |            3           32
+  1 |   1 |      1,176 |          MBConv |        [1, 16, 1, 3] |           32            8
+  2 |   1 |      1,650 |          MBConv |        [6, 24, 2, 3] |            8            8
+  3 |   1 |      1,650 |          MBConv |        [6, 40, 2, 3] |            8            8
+  4 |   1 |      1,650 |          MBConv |        [6, 80, 2, 3] |            8            8
+  5 |   1 |      1,650 |          MBConv |       [6, 112, 1, 3] |            8            8
+  6 |   1 |      1,650 |          MBConv |       [6, 192, 2, 3] |            8            8
+  7 |   1 |      1,650 |          MBConv |       [6, 320, 1, 3] |            8            8
+  8 |   1 |      1,280 |            Conv |          [128, 1, 1] |            8          128
+  9 |   1 |          0 |   GlobalAvgPool |                   [] |          128          128
+ 10 |   1 |      2,080 |            Conv | [9, 1, 1, None, 1, None] |          128           16
+Model Summary: 163 layers, 15,364 parameters, 15,364 gradients
+Model save path: exp/2021-06-10_07-19-41/best.pt
+macs: 2008900.0
+AUG_TEST: simple_augment_test
+AUG_TRAIN: randaugment_train
+AUG_TRAIN_PARAMS:
+  level: null
+  n_select: 4
+BATCH_SIZE: 64
+DATASET: TACO
+DATA_PATH: /opt/ml/input/data/
+EPOCHS: 400
+FP16: true
+IMG_SIZE: 56
+INIT_LR: 0.1
+VAL_RATIO: 0.2
+Model saved. Current best test f1: 0.417  (epoch 340)
+ì œì¶œ ì•ˆí•¨
+------------------------------------------------------------------------------------------------------
+sub 11
+idx |   n |     params |          module |            arguments |   in_channel |   out_channel
+----------------------------------------------------------------------------------------------
+  0 |   1 |        928 |            Conv |           [32, 3, 2] |            3           32
+  1 |   1 |      1,176 |          MBConv |        [1, 16, 1, 3] |           32            8
+  2 |   1 |      3,300 |          MBConv |        [6, 24, 2, 3] |            8            8
+  3 |   1 |      3,300 |          MBConv |        [6, 40, 2, 3] |            8            8
+  4 |   1 |      4,950 |          MBConv |        [6, 80, 2, 3] |            8            8
+  5 |   1 |      4,950 |          MBConv |       [6, 112, 1, 3] |            8            8
+  6 |   1 |      6,600 |          MBConv |       [6, 192, 2, 3] |            8            8
+  7 |   1 |      1,650 |          MBConv |       [6, 320, 1, 3] |            8            8
+  8 |   1 |      1,280 |            Conv |          [128, 1, 1] |            8          128
+  9 |   1 |          0 |   GlobalAvgPool |                   [] |          128          128
+ 10 |   1 |      2,080 |            Conv | [9, 1, 1, None, 1, None] |          128           16
+Model Summary: 352 layers, 30,214 parameters, 30,214 gradients
+Model save path: exp/2021-06-11_00-56-08/best.pt
+macs: 2424582.0
+AUG_TEST: simple_augment_test
+AUG_TRAIN: randaugment_train
+AUG_TRAIN_PARAMS:
+  level: null
+  n_select: 2
+BATCH_SIZE: 64
+DATASET: TACO
+DATA_PATH: /opt/ml/input/data/
+EPOCHS: 400
+FP16: true
+IMG_SIZE: 56
+INIT_LR: 0.1
+VAL_RATIO: 0.0
