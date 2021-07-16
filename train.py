@@ -69,7 +69,7 @@ def train(
         device=device,
     )
     # Amp loss scaler
-    scaler = (
+    loss_scaler = (
         torch.cuda.amp.GradScaler() if fp16 and device != torch.device("cpu") else None
     )
 
@@ -79,7 +79,7 @@ def train(
         criterion=criterion,
         optimizer=optimizer,
         scheduler=scheduler,
-        scaler=scaler,
+        scaler=loss_scaler,
         device=device,
         model_path=model_path,
         verbose=1,
